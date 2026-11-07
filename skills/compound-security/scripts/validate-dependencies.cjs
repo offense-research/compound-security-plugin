@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
-const {readJsonSnapshot,safeDiagnostic}=require('./validate-closure.cjs');
+const {safeDiagnostic}=require('./validate-closure.cjs');
+const {isSourceRevision}=require('./dependency-source.cjs');
 const dimensions=['declarations','resolutions','outdated','advisories','usage'];
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const text=x=>typeof x==='string'&&x.trim().length>0;
@@ -8,7 +9,7 @@ function validate(x){
  const errors=[]; const check=(v,m)=>{if(!v)errors.push(m);};
  if(!object(x))return ['snapshot must be an object'];
  check(x.schema_version===1,'schema_version must be 1');
- check(text(x.source_revision),'source_revision required');
+ check(isSourceRevision(x.source_revision),'source_revision must be a composite sha256 identity');
  check(text(x.generated_at)&&Number.isFinite(Date.parse(x.generated_at)),'generated_at required');
  const sets={};
  for(const key of ['evidence','instances','advisories','actions']){
@@ -85,6 +86,6 @@ function validate(x){
 module.exports={validate,dimensions};
 if(require.main===module){try{
  if(process.argv.length!==3)throw Error('Usage: node validate-dependencies.cjs DEPENDENCIES.json');
- const errors=validate(readJsonSnapshot(process.argv[2]));if(errors.length)throw Error(errors.join('\n'));
+ const errors=validate(require('./dependency-io.cjs').read(process.argv[2]));if(errors.length)throw Error(errors.join('\n'));
  console.log('Dependency record consistent; assertions are not proof of evidence truth.');
 }catch(e){console.error(safeDiagnostic(e.message));process.exitCode=1;}}

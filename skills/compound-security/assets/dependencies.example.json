@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "example_only": true,
-  "source_revision": "synthetic-source",
+  "source_revision": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
   "generated_at": "2026-11-06T00:00:00Z",
   "evidence": [
     {
@@ -9,7 +9,7 @@
       "kind": "manifest",
       "status": "ok",
       "binding": "current",
-      "source_revision": "synthetic-source",
+      "source_revision": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
       "captured_at": "2026-11-06T00:00:00Z"
     }
   ],

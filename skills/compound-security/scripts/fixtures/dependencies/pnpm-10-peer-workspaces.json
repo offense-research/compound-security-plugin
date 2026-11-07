@@ -1,0 +1,64 @@
+[
+  {
+    "name": "workspace-fixture",
+    "version": "1.0.0",
+    "path": "/private/tmp/dependency-workspace-ou4cgcri",
+    "private": true
+  },
+  {
+    "name": "a",
+    "version": "1.0.0",
+    "path": "/private/tmp/dependency-workspace-ou4cgcri/packages/a",
+    "private": false,
+    "dependencies": {
+      "peer": {
+        "from": "peer",
+        "version": "1.0.0",
+        "resolved": "https://registry.npmjs.org/peer/-/peer-1.0.0.tgz",
+        "path": ".pnpm/peer@1.0.0/node_modules/peer"
+      },
+      "parent": {
+        "from": "parent",
+        "version": "1.0.0",
+        "resolved": "https://registry.npmjs.org/parent/-/parent-1.0.0.tgz",
+        "path": ".pnpm/parent@1.0.0_peer@1.0.0/node_modules/parent",
+        "dependencies": {
+          "peer": {
+            "from": "peer",
+            "version": "1.0.0",
+            "resolved": "https://registry.npmjs.org/peer/-/peer-1.0.0.tgz",
+            "path": ".pnpm/peer@1.0.0/node_modules/peer"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "b",
+    "version": "1.0.0",
+    "path": "/private/tmp/dependency-workspace-ou4cgcri/packages/b",
+    "private": false,
+    "dependencies": {
+      "peer": {
+        "from": "peer",
+        "version": "2.0.0",
+        "resolved": "https://registry.npmjs.org/peer/-/peer-2.0.0.tgz",
+        "path": ".pnpm/peer@2.0.0/node_modules/peer"
+      },
+      "parent": {
+        "from": "parent",
+        "version": "1.0.0",
+        "resolved": "https://registry.npmjs.org/parent/-/parent-1.0.0.tgz",
+        "path": ".pnpm/parent@1.0.0_peer@2.0.0/node_modules/parent",
+        "dependencies": {
+          "peer": {
+            "from": "peer",
+            "version": "2.0.0",
+            "resolved": "https://registry.npmjs.org/peer/-/peer-2.0.0.tgz",
+            "path": ".pnpm/peer@2.0.0/node_modules/peer"
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "example_only": true,
+  "source_revision": "synthetic-source",
+  "generated_at": "2026-11-06T00:00:00Z",
+  "evidence": [
+    {
+      "id": "manifest",
+      "kind": "manifest",
+      "status": "ok",
+      "binding": "current",
+      "source_revision": "synthetic-source",
+      "captured_at": "2026-11-06T00:00:00Z"
+    }
+  ],
+  "instances": [
+    {
+      "id": "root:parser",
+      "name": "example-parser",
+      "version": "^1.0.0",
+      "workspace": ".",
+      "location": "dependencies/example-parser",
+      "provenance": "declared",
+      "evidence": [
+        "manifest"
+      ]
+    }
+  ],
+  "edges": [],
+  "advisories": [],
+  "actions": [
+    {
+      "id": "inspect-parser",
+      "title": "Inspect parser upgrade options",
+      "target": "example-parser",
+      "order": 1,
+      "rationale": "Synthetic example only; confirm resolved version first.",
+      "uncertainty": "Resolved version unknown",
+      "instances": [
+        "root:parser"
+      ],
+      "advisories": [],
+      "evidence": [
+        "manifest"
+      ],
+      "prerequisites": []
+    }
+  ],
+  "lessons": [],
+  "patches": [],
+  "coverage": {
+    "declarations": {
+      "status": "complete",
+      "scope": "explicit root manifest",
+      "evidence": [
+        "manifest"
+      ],
+      "gaps": []
+    },
+    "resolutions": {
+      "status": "unavailable",
+      "scope": "explicit root manifest",
+      "evidence": [],
+      "gaps": [
+        "Not collected"
+      ]
+    },
+    "outdated": {
+      "status": "unavailable",
+      "scope": "explicit root manifest",
+      "evidence": [],
+      "gaps": [
+        "Not collected"
+      ]
+    },
+    "advisories": {
+      "status": "unavailable",
+      "scope": "explicit root manifest",
+      "evidence": [],
+      "gaps": [
+        "Not collected"
+      ]
+    },
+    "usage": {
+      "status": "unavailable",
+      "scope": "explicit root manifest",
+      "evidence": [],
+      "gaps": [
+        "Not collected"
+      ]
+    }
+  }
+}

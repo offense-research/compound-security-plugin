@@ -1,4 +1,20 @@
-# Validation record — v0.2.1
+# Dependency visibility validation — v0.4.0
+
+Validated November 7, 2026 with Node.js v26.12.0 and Python 3.
+
+- `python3 scripts/validate_plugin.py` checks two hosts, two marketplaces, twelve wrappers, and bundled resources.
+- `node --test skills/compound-security/references/audit/*.test.cjs skills/compound-security/scripts/*.test.cjs` passes 172 tests, including unchanged audit/closure/patch coverage and the new dependency contract, normalization, rendering, handoff, and private IO suites.
+- npm 11.20.0 and pnpm 10.23.0 list fixtures are authentic outputs from synthetic lockfile projects, including two npm workspaces and pnpm peer-context copies. Audit/outdated fixtures are synthetic shape tests, not live registry captures.
+- A fresh agent generated private reports for an npm direct recommendation, pnpm transitive-parent recommendation, and offline partial inventory. It checked host-qualified handoffs, rejected stale source, preserved applied/stale/not-applicable lessons, and treated malicious metadata as data. It made no target changes or network requests.
+- An offline headless Brave check rendered 1,000 synthetic instances at 1280px and 375px without horizontal overflow, opened an instance using Tab/Enter, and observed no external page requests. Screenshots were inspected at the narrow width.
+- Disposable package copies rejected a missing dependency wrapper, reference, or normalizer and an unqualified follow-up command.
+- The IO tests reject overwrite, symlink, Git-internal and shared-writable destinations; a process/network spy guards normalization. URL credentials in retained observations are scrubbed. Sharing tests verify default package masking and exclusion of arbitrary assessment prose.
+
+Review fixes cover mixed-success captures, workspace-specific outdated mapping, composite source freshness, private advisory details, scope-qualified sharing, mixed-case Git paths, and a CLI round trip above 1,000 instances. Raw acquisition commands are omitted.
+
+Human usability, native host installation/discovery, and an end-to-end repair in a controlled runner remain unverified. The synthetic agent exercise does not establish that a person can identify the next action or that a real dependency upgrade works. No live target, deployment, or hosted scanner was used. Names are always masked by default in sharing exports; explicit exact-name inclusion is the supported disclosure mechanism.
+
+## Previous validation record — v0.2.1
 
 Validated November 5, 2026.
 

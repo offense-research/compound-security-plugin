@@ -34,13 +34,24 @@ function validate(x){
   check(['complete','partial','unavailable'].includes(c.status),`${dimension} invalid coverage`);
   check(text(c.scope)&&Array.isArray(c.gaps)&&c.gaps.every(text),`${dimension} scope/gaps required`);
   references(c.evidence,sets.evidence,dimension);
-  if(c.status==='complete')check(current(c.evidence)&&c.gaps.length===0,`${dimension} complete requires current successful evidence without gaps`);
-  if(c.status!=='complete')check(c.gaps.length>0,`${dimension} incomplete requires gap`);
+  if(c.status==='complete')check(current(c.evidence)&&Array.isArray(c.gaps)&&c.gaps.length===0,`${dimension} complete requires current successful evidence without gaps`);
+  if(c.status!=='complete')check(Array.isArray(c.gaps)&&c.gaps.length>0,`${dimension} incomplete requires gap`);
  }
  for(const p of sets.instances.values()){
   check(text(p.name)&&text(p.version)&&text(p.workspace)&&text(p.location),'instance identity required');
   check(['declared','lockfile','installed'].includes(p.provenance),'invalid instance provenance');
   references(p.evidence,sets.evidence,'instance evidence',true);
+  if(p.outdated!==undefined){
+   check(object(p.outdated),'outdated must be an object');
+   if(object(p.outdated)){
+    check([p.outdated.wanted,p.outdated.latest].every(v=>v===null||text(v)),'invalid outdated versions');
+    check(current([p.outdated.evidence]),'outdated needs current evidence');
+   }
+  }
+  if(p.usage!==undefined){
+   check(object(p.usage)&&text(p.usage.observation)&&text(p.usage.intent),'usage observation/intent required');
+   if(object(p.usage)){references(p.usage.evidence,sets.evidence,'usage evidence',true);check(current(p.usage.evidence),'usage needs current evidence');}
+  }
   check(current(p.evidence),'current inventory needs current evidence');
  }
  check(Array.isArray(x.edges),'edges must be an array');
@@ -50,16 +61,25 @@ function validate(x){
   check(current(a.evidence),'current advisory needs current evidence');
  }
  for(const a of sets.actions.values()){
+  if(a.category!==undefined)check(['upgrade','investigate','mitigate','defer'].includes(a.category),'invalid action category');
   check(text(a.title)&&text(a.rationale)&&text(a.uncertainty)&&text(a.target),'action explanation/target required');
   check(Number.isInteger(a.order)&&a.order>0,'action order required');
   references(a.instances,sets.instances,'action instances',true);references(a.advisories,sets.advisories,'action advisories');
   references(a.evidence,sets.evidence,'action evidence',true);check(current(a.evidence),'action needs current evidence');
   references(a.prerequisites,sets.actions,'action prerequisites');
-  check(!a.prerequisites?.includes(a.id),'action cannot require itself');
-  for(const id of a.prerequisites||[])check(sets.actions.get(id)?.order<a.order,'prerequisite must precede action');
+  check(!Array.isArray(a.prerequisites)||!a.prerequisites.includes(a.id),'action cannot require itself');
+  for(const id of Array.isArray(a.prerequisites)?a.prerequisites:[])check(sets.actions.get(id)?.order<a.order,'prerequisite must precede action');
  }
  check(Array.isArray(x.lessons),'lessons must be an array');
  for(const l of Array.isArray(x.lessons)?x.lessons:[])check(object(l)&&text(l.label)&&['applied','stale','not_applicable'].includes(l.status),'invalid lesson');
+ if(x.patches!==undefined){
+  check(Array.isArray(x.patches),'patches must be an array');
+  for(const p of Array.isArray(x.patches)?x.patches:[]){
+   if(!object(p)){errors.push('invalid patch projection');continue;}
+   check(text(p.source_revision),'patch source required');
+   for(const [key,states] of Object.entries({security:['pending','advisory_resolved','exploit_verified'],compatibility:['pending','passed','failed'],deployment:['not_deployed','staging_verified','deployed','observed','rolled_back']}))check(object(p[key])&&states.includes(p[key].status),`invalid patch ${key}`);
+  }
+ }
  return errors;
 }
 module.exports={validate,dimensions};

@@ -5,16 +5,34 @@ const {validate,dimensions}=require('./validate-dependencies.cjs');
 const io=require('./dependency-io.cjs');
 const id=(...parts)=>createHash('sha256').update(JSON.stringify(parts)).digest('hex').slice(0,24);
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x);
+function redact(value){
+ if(typeof value==='string')return value.replace(/https?:\/\/[^\s<>"']+/gi,raw=>{try{
+  const url=new URL(raw);url.username='';url.password='';
+  for(const key of [...url.searchParams.keys()])if(/token|auth|password|secret|key|signature|credential/i.test(key))url.searchParams.set(key,'REDACTED');
+  return url.href;
+ }catch{return '[invalid URL omitted]';}});
+ if(Array.isArray(value))return value.map(redact);
+ if(obj(value))return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,redact(v)]));
+ return value;
+}
 const supported=c=>c.manager==='npm'?/^11\./.test(c.version):c.manager==='pnpm'&&/^10\./.test(c.version)&&Number(c.version.split('.')[1])>=23;
 function normalize(input){
  if(!obj(input)||typeof input.source_revision!=='string'||!Array.isArray(input.manifests)||!Array.isArray(input.captures))throw Error('Expected source_revision, manifests and captures');
  const x={schema_version:1,source_revision:input.source_revision,generated_at:input.generated_at||new Date().toISOString(),instances:[],edges:[],advisories:[],actions:[],lessons:[],patches:[],evidence:[],coverage:{}};
  for(const d of dimensions)x.coverage[d]={status:'unavailable',scope:'not collected',evidence:[],gaps:['Not collected']};
  const cover=(dim,e,scope,gaps=[])=>{const c=x.coverage[dim];c.status=gaps.length||c.gaps.some(g=>g!=='Not collected')?'partial':'complete';c.scope=scope;c.evidence.push(e.id);c.gaps=[...new Set([...c.gaps.filter(g=>g!=='Not collected'),...gaps])];};
+ const instanceIds=new Set(),childrenByParent=new Map();
  const add=(name,version,workspace,location,provenance,evidence,parent)=>{
   const key=id(workspace,location,name,version,provenance);
-  if(!x.instances.some(p=>p.id===key))x.instances.push({id:key,name,version,workspace,location,provenance,evidence:[evidence]});
-  if(parent&&!x.edges.some(e=>e.from===parent&&e.to===key))x.edges.push({from:parent,to:key});return key;
+  if(!instanceIds.has(key)){
+   instanceIds.add(key);x.instances.push({id:key,name,version,workspace,location,provenance,evidence:[evidence]});
+  }
+  if(parent){
+   if(!childrenByParent.has(parent))childrenByParent.set(parent,new Set());
+   const children=childrenByParent.get(parent);
+   if(!children.has(key)){children.add(key);x.edges.push({from:parent,to:key});}
+  }
+  return key;
  };
  for(const m of input.manifests){
   if(!obj(m.data)||typeof m.workspace!=='string')throw Error('Invalid manifest entry');
@@ -25,9 +43,10 @@ function normalize(input){
   }
   cover('declarations',e,'explicit supplied manifests',m.data.workspaces?['Workspace expansion must be checked against supplied manifests']:[]);
  }
- for(const c of input.captures){
+ const captureOrder={list:0,outdated:1,audit:2};
+ for(const c of [...input.captures].sort((a,b)=>(captureOrder[a?.kind]??3)-(captureOrder[b?.kind]??3))){
   if(!obj(c)||typeof c.id!=='string')throw Error('Invalid capture');
-  const e={id:c.id,kind:c.kind,status:'ok',binding:c.source_revision===x.source_revision?'current':c.source_revision?'historical':'unbound',source_revision:c.source_revision||null,captured_at:c.captured_at,manager:c.manager,version:c.version,exit_code:c.exit_code};x.evidence.push(e);
+  const e={id:c.id,kind:c.kind,status:'ok',binding:c.source_revision===x.source_revision?'current':c.source_revision?'historical':'unbound',source_revision:c.source_revision||null,captured_at:c.captured_at,manager:c.manager,version:c.version,exit_code:c.exit_code,scope:c.scope||'unspecified',filters:Array.isArray(c.filters)?c.filters:[],payload_digest:id(c.payload),acquisition:typeof c.command==='string'?c.command:'owner import'};x.evidence.push(e);
   const dim={list:'resolutions',outdated:'outdated',audit:'advisories'}[c.kind];
   if(!dim){e.status='error';continue;}
   let gap='';
@@ -82,7 +101,7 @@ function normalize(input){
    cover(dim,e,c.scope||'captured audit scope',gaps);
   }
  }
- const errors=validate(x);if(errors.length)throw Error(errors.join('\n'));return x;
+ const sanitized=redact(x);const errors=validate(sanitized);if(errors.length)throw Error(errors.join('\n'));return sanitized;
 }
 module.exports={normalize};
 if(require.main===module)io.run(()=>{

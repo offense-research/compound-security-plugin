@@ -12,3 +12,4 @@ for(const [name,change] of Object.entries({
  'unknown lesson state':x=>x.lessons.push({label:'test',status:'trusted'})
 })) test(name,()=>{const x=fresh();change(x);assert.ok(validate(x).length);});
 test('malformed input returns errors',()=>{for(const x of [null,[],{},1])assert.ok(validate(x).length);});
+test('malformed nested fields produce diagnostics rather than throwing',()=>{for(const mutate of [x=>{x.coverage.declarations.gaps=null;},x=>{x.actions[0].prerequisites={};},x=>{x.patches=[null];},x=>{x.instances[0].outdated={evidence:'missing'};}]){const x=structuredClone(require('../assets/dependencies.example.json'));mutate(x);assert.ok(validate(x).length);}});

@@ -8,7 +8,9 @@ const md=s=>escape(s).replace(/[\\`*_[\]()#!|]/g,'\\$&').replace(/[\r\n]/g,' ');
 function render(x,options={}){
  const errors=validate(x);if(errors.length)throw Error(errors.join('\n'));
  const share=options.share===true,include=new Set(options.includeNames||[]);
- const name=p=>share&&!include.has(p.name)?`Package ${x.instances.indexOf(p)+1}`:p.name;
+ const byId=new Map(x.instances.map(p=>[p.id,p]));
+ const ordinal=new Map(x.instances.map((p,i)=>[p.id,i+1]));
+ const name=p=>share&&!include.has(p.name)?`Package ${ordinal.get(p.id)}`:p.name;
  const counts=`${x.instances.length} package instances · ${x.advisories.length} advisory identities · ${x.actions.length} proposed actions`;
  const label=options.label||(share?'Shared dependency summary':'Dependency inspection');
  const html=[`<header><p class="eyebrow">Compound Security · ${share?'Sharing projection':'Private local report'}</p><h1>${escape(label)}</h1><p class="muted">Captured ${escape(x.generated_at)}. ${share?'Review before sharing.':'Contains private repository facts; generate a sharing projection before forwarding.'}</p><p class="counts">${escape(counts)}</p></header>`];
@@ -18,21 +20,25 @@ function render(x,options={}){
  html.push('<section><h2>Recommended next actions</h2>');markdown.push('## Recommended next actions');
  if(!actions.length){const message='No assessed action yet. Resolve the coverage gaps or add an evidence-backed assessment; this does not mean the repository is secure.';html.push(`<p>${message}</p>`);markdown.push(message);}
  for(const a of actions){
-  const title=share?`Dependency action ${a.order}`:a.title;
+  const title=share?`${a.category||'investigate'}: Dependency action ${a.order}`:a.title;
   const body=share?`${a.instances.length} affected instances; ${a.advisories.length} advisory identities. Proposed, not repaired. ${a.prerequisites.length} prerequisite actions. Verification pending.`:`${a.rationale} Uncertainty: ${a.uncertainty}. Evidence: ${a.evidence.join(', ')}. Prerequisites: ${a.prerequisites.join(', ')||'none recorded'}.`;
-  html.push(`<article><h3>${a.order}. ${escape(title)}</h3><p>${escape(body)}</p><ul>${a.instances.map(key=>{const p=x.instances.find(p=>p.id===key);return `<li>${escape(name(p))}${share?'':` @ ${escape(p.version)}`}</li>`;}).join('')}</ul></article>`);
-  markdown.push(`### ${a.order}. ${md(title)}`,md(body),...a.instances.map(key=>`- ${md(name(x.instances.find(p=>p.id===key)))}`));
+  html.push(`<article><h3>${a.order}. ${escape(title)}</h3><p>${escape(body)}</p><ul>${a.instances.map(key=>{const p=byId.get(key);return `<li>${escape(name(p))}${share?'':` @ ${escape(p.version)}`}</li>`;}).join('')}</ul></article>`);
+  markdown.push(`### ${a.order}. ${md(title)}`,md(body),...a.instances.map(key=>`- ${md(name(byId.get(key)))}`));
  }
  html.push('</section>');
  section('Coverage and gaps',Object.entries(x.coverage).map(([d,c])=>share?`${d}: ${c.status}. ${c.gaps.length} recorded gaps; ask the technical owner for details.`:`${d}: ${c.status}. Scope: ${c.scope}. ${c.gaps.join('; ')||'No recorded gaps.'}`));
  if(!share){
   html.push('<section><h2>Dependency paths and inventory</h2><p>Expand an instance to inspect its parent paths. Use your browser’s Find command to locate a package. Declared ranges and resolved instances are separate observations.</p>');markdown.push('## Dependency paths and inventory');
-  const byId=new Map(x.instances.map(p=>[p.id,p]));
+  const parentsByChild=new Map();
+  for(const edge of x.edges){
+   if(!parentsByChild.has(edge.to))parentsByChild.set(edge.to,[]);
+   parentsByChild.get(edge.to).push(byId.get(edge.from));
+  }
   for(const p of x.instances){
-   const parents=x.edges.filter(e=>e.to===p.id).map(e=>byId.get(e.from));
+   const parents=parentsByChild.get(p.id)||[];
    const title=`${p.name} @ ${p.version} — ${p.workspace} (${p.provenance})`;
    const ancestry=parents.length?parents.map(n=>`${n.name} @ ${n.version} → ${p.name}`).join('; '):'No parent recorded in this capture';
-   const detail=`${ancestry}. Location: ${p.location}. Evidence: ${p.evidence.join(', ')}.${p.outdated?` Wanted: ${p.outdated.wanted||'unknown'}; latest tag: ${p.outdated.latest||'unknown'}.`:''}`;
+   const detail=`${ancestry}. Location: ${p.location}. Evidence: ${p.evidence.join(', ')}.${p.usage?` Usage: ${p.usage.observation}. Intent: ${p.usage.intent}. Usage evidence: ${p.usage.evidence.join(', ')}.`:' Usage and historical intent: unknown.'}${p.outdated?` Wanted: ${p.outdated.wanted||'unknown'}; latest tag: ${p.outdated.latest||'unknown'}.`:''}`;
    html.push(`<details><summary>${escape(title)}</summary><p>${escape(detail)}</p></details>`);markdown.push(`- ${md(title)}: ${md(detail)}`);
   }
   html.push('</section>');

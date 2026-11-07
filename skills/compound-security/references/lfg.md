@@ -16,6 +16,7 @@ Treat “LFG” as permission to perform the requested local work, including sco
 | No target or useful context | Use `help` to identify one concrete entry point; report the exact missing target rather than running a generic audit |
 | Vague goal with materially different interpretations | Use the [brainstorm workflow](brainstorm.md) to choose a bounded goal; continue once the choice is settled because LFG already requests execution |
 | Security brief or scoped concern, no verified findings | Audit that scope; do not treat a brainstorm hypothesis as confirmed |
+| Dependency inventory or report-only backlog request | Follow [dependencies.md](dependencies.md); stop at reporting unless repair is explicitly in the requested scope |
 | Dependency upgrade, package advisory, upgrade PR, or patch checkpoint | Follow [patching.md](patching.md); establish applicability and resume missing patch stages, retaining separate security/compatibility/deployment state |
 | Scanner alert or unvalidated candidate | Establish current source trace and independent candidate validation through the audit engine; keep unknown runtime/deployment facts blocked |
 | Current confirmed finding or verified audit | Plan the linked fix and its regression, retaining the original audit baseline |

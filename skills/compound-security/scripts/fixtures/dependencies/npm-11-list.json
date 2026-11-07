@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "inspection-fixture",
+  "dependencies": {
+    "parent": {
+      "version": "1.0.0",
+      "overridden": false,
+      "dependencies": {
+        "leaf": {
+          "version": "1.0.0",
+          "overridden": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {normalize}=require('./normalize-dependencies.cjs');
+function input(manager='npm',version='11.20.0') {return {source_revision:'r1',generated_at:'2026-11-06T00:00:00Z',manifests:[{workspace:'.',data:{dependencies:{parent:'1.0.0'}}}],captures:[{id:'tree',manager,version,kind:'list',source_revision:'r1',captured_at:'2026-11-06T00:00:00Z',exit_code:0,scope:'root',provenance:'lockfile',payload:require(`./fixtures/dependencies/${manager==='npm'?'npm-11':'pnpm-10'}-list.json`)}]};}
+test('captured npm and pnpm trees preserve ancestry',()=>{for(const args of [[],['pnpm','10.23.0']]){const x=normalize(input(...args));assert.equal(x.instances.filter(p=>p.provenance==='lockfile').length,2);assert.equal(x.edges.length,1);assert.equal(x.coverage.resolutions.status,'complete');assert.equal(x.coverage.advisories.status,'unavailable');}});
+test('stale captures never enter current inventory',()=>{const x=input();x.captures[0].source_revision='old';assert.equal(normalize(x).instances.length,1);});
+test('unsupported manager keeps declaration fallback',()=>{const x=normalize(input('pnpm','12.0.0'));assert.equal(x.instances.length,1);assert.equal(x.coverage.resolutions.status,'unavailable');});
+test('nonzero audit with findings differs from acquisition error',()=>{const x=input();x.captures.push({...x.captures[0],id:'audit',kind:'audit',exit_code:1,payload:{vulnerabilities:{leaf:{name:'leaf',via:[{source:123,url:'https://github.com/advisories/GHSA-example',title:'example'}]}}}});assert.equal(normalize(x).advisories.length,1);x.captures[1].payload={error:{message:'denied'}};assert.equal(normalize(x).coverage.advisories.status,'unavailable');});
+test('empty or malformed trees do not claim complete coverage',()=>{const x=input();x.captures[0].payload={};assert.equal(normalize(x).coverage.resolutions.status,'unavailable');});
+test('private URLs never propagate into inventory',()=>{const x=input('pnpm','10.23.0');x.captures[0].payload[0].dependencies.parent.resolved='https://secret:token@private.invalid/pkg';assert.ok(!JSON.stringify(normalize(x)).includes('token'));});
+module.exports={input};
+test('pnpm audit advisories are retained',()=>{const x=input('pnpm','10.23.0');x.captures.push({...x.captures[0],id:'audit',kind:'audit',payload:{advisories:{42:{id:42,module_name:'leaf',title:'test'}}}});assert.equal(normalize(x).advisories.length,1);});
+test('normalization is deterministic and leaves input unchanged',()=>{const x=input(),before=JSON.stringify(x);assert.deepEqual(normalize(x),normalize(x));assert.equal(JSON.stringify(x),before);});
+test('duplicate resolved versions retain separate instances',()=>{const x=input();x.captures[0].payload=structuredClone(x.captures[0].payload);x.captures[0].payload.dependencies.other={version:'2.0.0',dependencies:{leaf:{version:'2.0.0'}}};assert.equal(normalize(x).instances.filter(p=>p.name==='leaf').length,2);});

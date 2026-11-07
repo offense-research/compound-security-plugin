@@ -1,6 +1,6 @@
 ---
 name: compound-security
-description: Help people choose a useful security task, brainstorm priorities, audit source code, fix independently verified findings, and retain reusable security knowledge. Use for security onboarding, uncertainty about where to start, security brainstorming, repository audits, remediation, regression reviews, verified lessons, or an autonomous security LFG. Support patch (dependency upgrades and rollout evidence), help, brainstorm, lfg, audit, plan, fix, verify, compound, run, and status modes; help and brainstorming do not authorize an audit or source changes.
+description: Help people choose a useful security task, brainstorm priorities, audit source code, fix independently verified findings, and retain reusable security knowledge. Use for security onboarding, uncertainty about where to start, security brainstorming, repository audits, remediation, regression reviews, verified lessons, or an autonomous security LFG. Support dependencies (local inventory and reports), patch (dependency upgrades and rollout evidence), help, brainstorm, lfg, audit, plan, fix, verify, compound, run, and status modes; help and brainstorming do not authorize an audit or source changes.
 ---
 
 # Compound Security
@@ -17,6 +17,7 @@ Preserve two independent truths: whether a vulnerability was established at an a
 | `help` | One recommended starting point with a ready-to-use command | Read-only; no run artifacts |
 | `brainstorm` | Evidence-grounded options and a scoped security brief | Brief only; no product edits or automatic audit |
 | `lfg` | Route from a goal or existing work, complete missing stages, resume with bounded retries | Requested local work and private checkpoints; disclose blockers |
+| `dependencies` | Dependency inventory, explained actions, and local reports | Target source read-only; private output only; sharing export on request |
 | `patch` | Dependency inventory, upgrade plan, local rehearsal, and explicit rollout evidence | Scoped local repairs and private patch records; external actions require authorization |
 | `audit` | Six-phase audit and coverage report | Audit artifacts only; target source read-only |
 | `plan` | Plan linked to confirmed findings | Plan and closure ledger only |
@@ -35,6 +36,8 @@ No mode implicitly authorizes production changes, vulnerability publication, mes
 Read [commands.md](references/commands.md) first and retain the calling wrapper's registered command identity. Apply its outgoing-command check to every response and saved handoff.
 
 Dispatch before creating a run or starting an audit:
+
+For dependency inventory, outdated-package overview, dependency paths, or a shareable upgrade summary, use `dependencies` and read [dependencies.md](references/dependencies.md). Resolve inputs/private output and recall before collection. Return after reporting unless repair was already requested. For `status`, read dependency snapshots alongside patch records and flag stale source identity; do not regenerate reports in status mode.
 
 - **Help:** read [help.md](references/help.md), explain the most useful next action in the user's terms, then stop. Do not create directories or launch scans merely to recommend a command.
 - **Brainstorm:** read [brainstorm.md](references/brainstorm.md), inspect only enough context to suggest grounded options, and produce the requested brief using [security-brief.md](assets/security-brief.md). Do not turn questions into unproven findings or execute the recommended handoff.

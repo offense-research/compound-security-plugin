@@ -1,6 +1,6 @@
 interface:
   display_name: Compound Security
-  short_description: "Choose, audit, fix, and verify security work"
+  short_description: "Inspect dependencies, audit, patch, and verify"
   default_prompt: "Use $compound-security help to recommend the best security starting point for this project."
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg

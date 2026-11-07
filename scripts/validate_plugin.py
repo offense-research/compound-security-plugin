@@ -47,7 +47,7 @@ def validate(root):
         source = "./" if label == "Claude" else {"source": "local", "path": "./"}
         check(entry.get("source") == source, f"{label}: invalid local source")
 
-    modes = ("help", "brainstorm", "lfg", "patch", "audit", "plan", "fix", "verify", "compound", "run", "status")
+    modes = ("help", "brainstorm", "lfg", "dependencies", "patch", "audit", "plan", "fix", "verify", "compound", "run", "status")
     core = root / "skills/compound-security/SKILL.md"
     check(core.is_file(), "Missing skills/compound-security/SKILL.md")
     core_root = core.parent
@@ -56,6 +56,14 @@ def validate(root):
         "references/execution.md", "references/remediation.md", "references/knowledge.md",
         "references/reviewer-prompts.md", "references/closure-contract.md", "references/synthesis.md",
         "references/help.md", "references/brainstorm.md", "references/lfg.md", "references/commands.md",
+        "references/dependencies.md", "assets/dependencies.example.json", "assets/dependencies-report.html",
+        "scripts/validate-dependencies.cjs", "scripts/validate-dependencies.test.cjs",
+        "scripts/dependency-source.cjs", "scripts/dependency-io.cjs", "scripts/dependency-io.test.cjs",
+        "scripts/normalize-dependencies.cjs", "scripts/normalize-dependencies.test.cjs",
+        "scripts/render-dependencies.cjs", "scripts/render-dependencies.test.cjs",
+        "scripts/dependencies-workflow.cjs", "scripts/dependencies-workflow.test.cjs",
+        "scripts/fixtures/dependencies/npm-11-workspaces.json", "scripts/fixtures/dependencies/pnpm-10-peer-workspaces.json",
+        "scripts/fixtures/dependencies/npm-11-list.json", "scripts/fixtures/dependencies/pnpm-10-list.json",
         "references/patching.md", "assets/patch-plan.md", "assets/patch-state.example.json",
         "scripts/validate-patch.cjs", "scripts/validate-patch.test.cjs",
         "assets/security-brief.md", "assets/lfg-state.example.json",
@@ -140,7 +148,7 @@ def main():
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Package structure valid: 2 host manifests, 2 marketplaces, 1 core skill, 11 entry points, 2 source notices.")
+    print("Package structure valid: 2 host manifests, 2 marketplaces, 1 core skill, 12 entry points, 2 source notices.")
     print("This is a structural check, not host-load or security-workflow validation.")
     return 0
 

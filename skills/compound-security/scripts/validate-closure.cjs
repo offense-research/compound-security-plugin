@@ -27,7 +27,7 @@ function safeQuote(value) {
   if (value === null || typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value))) return String(value);
   return `<${Array.isArray(value) ? 'array' : typeof value}>`;
 }
-function readJsonSnapshot(file) {
+function readJsonSnapshot(file, limits = LIMITS) {
   const { O_RDONLY, O_NOFOLLOW, O_NONBLOCK } = fs.constants;
   if (!Number.isInteger(O_NOFOLLOW) || O_NOFOLLOW === 0 || !Number.isInteger(O_NONBLOCK) || O_NONBLOCK === 0) {
     throw new Error('safe input unavailable');
@@ -36,19 +36,22 @@ function readJsonSnapshot(file) {
   let bytes;
   try {
     const stat = fs.fstatSync(fd);
-    if (!stat.isFile() || stat.size > LIMITS.inputBytes) throw new Error('unsafe input');
+    if (!stat.isFile() || stat.size > limits.inputBytes) throw new Error('unsafe input');
     const chunks = []; let length = 0;
     const chunk = Buffer.allocUnsafe(64 * 1024);
     while (true) {
-      const count = fs.readSync(fd, chunk, 0, Math.min(chunk.length, LIMITS.inputBytes + 1 - length), null);
+      const count = fs.readSync(fd, chunk, 0, Math.min(chunk.length, limits.inputBytes + 1 - length), null);
       if (count === 0) break;
       length += count;
-      if (length > LIMITS.inputBytes) throw new Error('input limit');
+      if (length > limits.inputBytes) throw new Error('input limit');
       chunks.push(Buffer.from(chunk.subarray(0, count)));
     }
     bytes = Buffer.concat(chunks, length);
   } finally { fs.closeSync(fd); }
-  const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+  return parseJsonSnapshot(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes), limits);
+}
+function parseJsonSnapshot(text, limits = LIMITS) {
+  if (Buffer.byteLength(text, 'utf8') > limits.inputBytes) throw new Error('input limit');
   let depth = 0; let quoted = false; let escaped = false;
   for (const ch of text) {
     if (quoted) {
@@ -57,7 +60,7 @@ function readJsonSnapshot(file) {
       else if (ch === '"') quoted = false;
     } else if (ch === '"') quoted = true;
     else if (ch === '{' || ch === '[') {
-      if (++depth > LIMITS.nestingDepth) throw new Error('nesting limit');
+      if (++depth > limits.nestingDepth) throw new Error('nesting limit');
     } else if (ch === '}' || ch === ']') depth--;
   }
   const document = JSON.parse(text);
@@ -65,13 +68,13 @@ function readJsonSnapshot(file) {
   const pending = [document]; let nodes = 0;
   while (pending.length) {
     const value = pending.pop();
-    if (++nodes > LIMITS.totalNodes) throw new Error('node limit');
-    if (typeof value === 'string' && value.length > LIMITS.stringLength) throw new Error('string limit');
+    if (++nodes > limits.totalNodes) throw new Error('node limit');
+    if (typeof value === 'string' && value.length > limits.stringLength) throw new Error('string limit');
     if (value && typeof value === 'object') {
       const keys = Object.keys(value);
-      if (keys.length > LIMITS.containerItems) throw new Error('container limit');
+      if (keys.length > limits.containerItems) throw new Error('container limit');
       for (const key of keys) {
-        if (key.length > LIMITS.keyLength) throw new Error('key limit');
+        if (key.length > limits.keyLength) throw new Error('key limit');
         pending.push(value[key]);
       }
     }
@@ -242,5 +245,5 @@ function main(argv) {
   return 0;
 }
 
-module.exports = { LIMITS, safeDiagnostic, readJsonSnapshot, validateClosure, main };
+module.exports = { LIMITS, safeDiagnostic, readJsonSnapshot, parseJsonSnapshot, validateClosure, main };
 if (require.main === module) process.exitCode = main(process.argv.slice(2));

@@ -78,3 +78,7 @@ Brainstorming is complete when a concrete task and honest readiness are recorded
 ## Source adaptation
 
 Adapted from [Every's ce-brainstorm](https://github.com/EveryInc/compound-engineering-plugin/blob/a76c45cef80bc5564a4fc7c06614ed278e4c3736/skills/ce-brainstorm/SKILL.md): settle what work is needed before implementation, ground dialogue in context, ask one material question at a time, and provide a clear handoff. The security brief, evidence/readiness distinctions, private artifact location, and scope options are new. This does not import Every's full unified-plan or model-routing machinery.
+
+## Dependency visibility
+
+When dependency counts overwhelm the owner, offer `dependencies` for a read-only inventory and explained next actions before selecting a patch. Read [dependencies.md](dependencies.md) for scope and [commands.md](commands.md) for the installed host command. An inspection recommendation does not authorize repair.

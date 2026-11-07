@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "name": "workspace-fixture",
+  "dependencies": {
+    "a": {
+      "version": "1.0.0",
+      "resolved": "file:../packages/a",
+      "overridden": false,
+      "dependencies": {
+        "parent": {
+          "version": "1.0.0",
+          "overridden": false,
+          "dependencies": {
+            "leaf": {
+              "version": "1.0.0",
+              "overridden": false
+            }
+          }
+        }
+      }
+    },
+    "b": {
+      "version": "1.0.0",
+      "resolved": "file:../packages/b",
+      "overridden": false,
+      "dependencies": {
+        "parent": {
+          "version": "2.0.0",
+          "overridden": false,
+          "dependencies": {
+            "leaf": {
+              "version": "2.0.0",
+              "overridden": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

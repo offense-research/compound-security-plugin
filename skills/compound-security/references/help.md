@@ -14,6 +14,7 @@ If the user has supplied no goal, explain three concrete starting points such as
 
 | What the user says or already has | Recommend | Explain the result |
 | --- | --- | --- |
+| “Set up this project” or “Check my setup” | `setup` | Establish project conventions and report available capabilities |
 | “I don't know where to start” or “What should we secure first?” | `brainstorm` | Pick a worthwhile, bounded task with a clear done condition |
 | “We are launching” or “Can users access each other's data?” | Scoped `audit` | Review the relevant source boundaries and distinguish evidence from unknowns |
 | “What is outdated?” or “Help me understand our dependency backlog” | `dependencies` | Local inventory, explained next actions, dependency paths, and coverage gaps |

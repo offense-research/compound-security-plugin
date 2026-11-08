@@ -4,9 +4,15 @@ Built by **[Offense Research, Inc.](https://offenseresearch.com/)**. Want our te
 
 Find a vulnerability, repair its cause, prove the fix, and retain the lesson so the next review starts with better security knowledge.
 
-Compound Security combines [Cloudflare's source-grounded security audit](https://github.com/cloudflare/security-audit-skill) with [Every's compound engineering loop](https://github.com/EveryInc/compound-engineering-plugin). The reusable core is one portable skill; version 0.4.0 provides twelve focused entry points and native Claude Code and Codex manifests.
+Compound Security combines [Cloudflare's source-grounded security audit](https://github.com/cloudflare/security-audit-skill) with [Every's compound engineering loop](https://github.com/EveryInc/compound-engineering-plugin). The reusable core is one portable skill; version 0.5.0 provides thirteen focused entry points and native Claude Code and Codex manifests.
 
-For all twelve workflows, examples, and record formats, read the [full documentation](docs/Full-Documentation.md).
+For all thirteen workflows, examples, and record formats, read the [full documentation](docs/Full-Documentation.md).
+
+## Set up this project
+
+After installing the plugin, enter `$compound-security:cs-setup Set up Compound Security for this repository` in the Codex prompt, or `/compound-security:cs-setup Set up Compound Security for this repository` in Claude Code. Standalone core users can use `$compound-security setup`.
+
+Setup inspects project context and available capabilities, then creates or refreshes a managed section in root `AGENTS.md`, preserving existing instructions. It recommends the next command without launching an audit, installing tools, or connecting services. Add `check only; do not write files` for a preview. Re-running setup updates the same section. This is project onboarding after installation, not a shell installer.
 
 ## Start here
 
@@ -14,7 +20,8 @@ Describe what you are building or what worries you. Start with `cs-help` for a r
 
 | What you have in mind | Start with | What you get |
 | --- | --- | --- |
-| "I don't know where to start" | `cs-help` | One recommended next action, a ready-to-use command, and a few alternatives |
+| "I don't know where to start" | `cs-setup` | Establish project conventions and check available capabilities |
+| `cs-help` | One recommended next action, a ready-to-use command, and a few alternatives |
 | "We're launching a SaaS; what should we secure first?" | `cs-brainstorm` | Grounded options, priorities, and a scoped `SECURITY-BRIEF.md` |
 | "Take this goal through to completion" | `cs-lfg` | A route from current evidence, local execution, independent verification, prevention, and honest blockers |
 
@@ -159,7 +166,7 @@ Local marketplace installation uses a cached copy; edits to this source director
 
 ### Update an existing Codex installation
 
-Version 0.4.0 adds local dependency inspection and preserves the plugin prefix in follow-up commands and brief artifacts. If an existing installation still suggests bare entry-point names, refresh its marketplace and installed copy:
+Version 0.5.0 adds project setup alongside local dependency inspection and preserves the plugin prefix in follow-up commands and brief artifacts. If an existing installation still suggests bare entry-point names, refresh its marketplace and installed copy:
 
 ```bash
 codex plugin marketplace upgrade compound-security-plugin

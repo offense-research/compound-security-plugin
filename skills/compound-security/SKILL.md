@@ -1,6 +1,6 @@
 ---
 name: compound-security
-description: Help people choose a useful security task, brainstorm priorities, audit source code, fix independently verified findings, and retain reusable security knowledge. Use for security onboarding, uncertainty about where to start, security brainstorming, repository audits, remediation, regression reviews, verified lessons, or an autonomous security LFG. Support dependencies (local inventory and reports), patch (dependency upgrades and rollout evidence), help, brainstorm, lfg, audit, plan, fix, verify, compound, run, and status modes; help and brainstorming do not authorize an audit or source changes.
+description: Help people choose a useful security task, brainstorm priorities, audit source code, fix independently verified findings, and retain reusable security knowledge. Use for security onboarding, uncertainty about where to start, security brainstorming, repository audits, remediation, regression reviews, verified lessons, or an autonomous security LFG. Support setup (project onboarding), dependencies (local inventory and reports), patch (dependency upgrades and rollout evidence), help, brainstorm, lfg, audit, plan, fix, verify, compound, run, and status modes; help and brainstorming do not authorize an audit or source changes.
 ---
 
 # Compound Security
@@ -14,6 +14,7 @@ Preserve two independent truths: whether a vulnerability was established at an a
 
 | Mode | Outcome | Write boundary |
 | --- | --- | --- |
+| `setup` | Project conventions, capability checks, and a next command | Managed root AGENTS.md section only; check-only stays read-only |
 | `help` | One recommended starting point with a ready-to-use command | Read-only; no run artifacts |
 | `brainstorm` | Evidence-grounded options and a scoped security brief | Brief only; no product edits or automatic audit |
 | `lfg` | Route from a goal or existing work, complete missing stages, resume with bounded retries | Requested local work and private checkpoints; disclose blockers |
@@ -27,7 +28,7 @@ Preserve two independent truths: whether a vulnerability was established at an a
 | `run` | Explicit full audit, plan, fix, verify, compound pipeline | Local end-to-end work; disclose blocked steps |
 | `status` | Current findings, closure state, stale evidence | Read-only |
 
-Treat “where do I start?” or “what can this do?” as `help`, “what should we prioritize?” as `brainstorm`, and an explicit “lfg” or “take this security goal through to completion” as `lfg`. Treat “audit this repo” as `audit`, “fix these findings” as `fix`, and an explicit request for the full compound-security pipeline as `run`. Narrow questions use relevant guidance without a full audit or artifacts. Infer mode, target, and scope from the request/workspace; ask only for a fact that materially blocks progress. A wrapper selects its named mode and forwards user arguments. Do not repeatedly request approval for authorized local work.
+Treat an explicit “set up Compound Security for this repo” as `setup`. Treat “where do I start?” or “what can this do?” as `help`, “what should we prioritize?” as `brainstorm`, and an explicit “lfg” or “take this security goal through to completion” as `lfg`. Treat “audit this repo” as `audit`, “fix these findings” as `fix`, and an explicit request for the full compound-security pipeline as `run`. Narrow questions use relevant guidance without a full audit or artifacts. Infer mode, target, and scope from the request/workspace; ask only for a fact that materially blocks progress. A wrapper selects its named mode and forwards user arguments. Do not repeatedly request approval for authorized local work.
 
 No mode implicitly authorizes production changes, vulnerability publication, messaging, merging, deploying, purchases, or uploads to a new service. Continue independent local work when a later external action needs authorization.
 
@@ -39,6 +40,7 @@ Dispatch before creating a run or starting an audit:
 
 For dependency inventory, outdated-package overview, dependency paths, or a shareable upgrade summary, use `dependencies` and read [dependencies.md](references/dependencies.md). Resolve inputs/private output and recall before collection. Return after reporting unless repair was already requested. For `status`, read dependency snapshots alongside patch records and flag stale source identity; do not regenerate reports in status mode.
 
+- **Setup:** read [setup.md](references/setup.md), inspect bounded project context, and create or refresh only its managed project convention. Dispatch here before generic run-directory creation. Do not start an audit.
 - **Help:** read [help.md](references/help.md), explain the most useful next action in the user's terms, then stop. Do not create directories or launch scans merely to recommend a command.
 - **Brainstorm:** read [brainstorm.md](references/brainstorm.md), inspect only enough context to suggest grounded options, and produce the requested brief using [security-brief.md](assets/security-brief.md). Do not turn questions into unproven findings or execute the recommended handoff.
 - **LFG:** read [lfg.md](references/lfg.md), establish the goal and current artifacts, then orchestrate only the missing stages below. Preserve the user’s restrictions, checkpoint progress, and honor retry/agent budgets. The [checkpoint example](assets/lfg-state.example.json) is a synthetic format illustration, not execution evidence or permission.
@@ -123,6 +125,8 @@ Report scope/revision/profile; confirmed vs blocked/unreviewed findings; verifie
 For `status`, inspect current source and linked artifacts, identify stale verification, and summarize without writes. End a full run only with requested phases complete or an explicitly recorded incomplete state with exact blockers and all feasible independent work finished.
 
 ## Resource map
+
+- [setup.md](references/setup.md): first-run project conventions and capability checks.
 
 - [patching.md](references/patching.md): dependency upgrade lifecycle, rehearsal, recovery, and deployment evidence.
 - [help.md](references/help.md): problem-first discovery and exact next-command recommendations.

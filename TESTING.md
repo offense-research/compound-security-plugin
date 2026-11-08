@@ -1,4 +1,16 @@
+# Project setup — v0.5.0
+
+Added `cs-setup` and core `setup` routing. Package validation checks the thirteenth wrapper and required setup reference. Disposable-copy negative checks reject a missing wrapper, missing reference, and an unqualified setup command. All 172 existing Node tests pass unchanged.
+
+Setup is an instruction workflow, not an executable installer. Check-only behavior, preservation of existing AGENTS.md content, idempotent updates, malformed-marker handling, symlink refusal, and host-correct handoffs are specified in the setup reference. They have not yet been verified in fresh-agent behavioral exercises or native host discovery; structural validation does not prove those behaviors.
+
 # Dependency visibility validation — v0.4.0
+
+## Continuous integration
+
+`.github/workflows/validate.yml` runs package validation and all bundled Node test suites on pull requests, pushes to `main`, and manual dispatch. The matrix checks the documented Node 18 minimum and Node 24, with Python 3.9. Actions are pinned to commit IDs, the job has read-only repository permissions, and checkout does not persist credentials. No target application, registry acquisition, or deployment is exercised. Native host discovery and controlled-runner repair remain separate verification gaps.
+
+## Release validation
 
 Validated November 7, 2026 with Node.js v26.12.0 and Python 3.
 

@@ -12,7 +12,7 @@ Read CONFIRMED_FINDING and actual source at AUDIT_REVISION. Propose minimal inva
 
 ## Independent fix verifier
 
-Verify FINDING_FINGERPRINT at PATCHED_REVISION. You must not be the fix author. Read original trace, baseline/patched source, diff, regression inputs and logs. Reconstruct the boundary; actively seek bypasses in alternate paths. Check old failure is the security defect, identical regression passes after, legitimate behavior remains, and evidence matches revisions. Execute only through established runner. Return verified|blocked|failed, your identity, reviewed revision, checks with command/input/result/evidence, bypasses and residual conditions. Do not modify source/canonical records. Never claim independent review from the author's context.
+Verify FINDING_FINGERPRINT at PATCHED_REVISION. First perform the [version check](closure-contract.md#version-check-before-re-review); return observed source and relevant deployment identities, evidence, mismatches, and the scope of the supported verdict. You must not be the fix author. Read original trace, baseline/patched source, diff, regression inputs and logs. Reconstruct the boundary; actively seek bypasses in alternate paths. Check old failure is the security defect, identical regression passes after, legitimate behavior remains, and evidence matches revisions. Execute only through established runner. Return verified|blocked|failed, your identity, reviewed revision, checks with command/input/result/evidence, bypasses and residual conditions. Do not modify source/canonical records. Never claim independent review from the author's context.
 
 ## Learning curator
 

@@ -47,7 +47,7 @@ def validate(root):
         source = "./" if label == "Claude" else {"source": "local", "path": "./"}
         check(entry.get("source") == source, f"{label}: invalid local source")
 
-    modes = ("help", "brainstorm", "lfg", "dependencies", "patch", "audit", "plan", "fix", "verify", "compound", "run", "status")
+    modes = ("setup", "help", "brainstorm", "lfg", "dependencies", "patch", "audit", "plan", "fix", "verify", "compound", "run", "status")
     core = root / "skills/compound-security/SKILL.md"
     check(core.is_file(), "Missing skills/compound-security/SKILL.md")
     core_root = core.parent
@@ -55,7 +55,7 @@ def validate(root):
         "LICENSE", "agents/openai.yaml", "references/EVERY-LICENSE.txt",
         "references/execution.md", "references/remediation.md", "references/knowledge.md",
         "references/reviewer-prompts.md", "references/closure-contract.md", "references/synthesis.md",
-        "references/help.md", "references/brainstorm.md", "references/lfg.md", "references/commands.md",
+        "references/setup.md", "references/help.md", "references/brainstorm.md", "references/lfg.md", "references/commands.md",
         "references/dependencies.md", "assets/dependencies.example.json", "assets/dependencies-report.html",
         "scripts/validate-dependencies.cjs", "scripts/validate-dependencies.test.cjs",
         "scripts/dependency-source.cjs", "scripts/dependency-io.cjs", "scripts/dependency-io.test.cjs",
@@ -148,7 +148,7 @@ def main():
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Package structure valid: 2 host manifests, 2 marketplaces, 1 core skill, 12 entry points, 2 source notices.")
+    print("Package structure valid: 2 host manifests, 2 marketplaces, 1 core skill, 13 entry points, 2 source notices.")
     print("This is a structural check, not host-load or security-workflow validation.")
     return 0
 

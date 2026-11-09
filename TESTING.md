@@ -1,4 +1,28 @@
+# Version checks and human-fix mode
+
+Package validation and `git diff --check` pass for these instruction changes. The checkpoint example remains parseable JSON; closure schema and validators are unchanged. Fresh-agent behavioral execution has not been performed.
+
+Behavioral acceptance cases for a future exercise:
+
+- A test log from a different source revision cannot support current closure; preserve the historical record and require revalidation.
+- A locally verified patch with unknown or mismatched deployed build remains locally verified only; deployment resolution stays unproven. Read-only status reports the mismatch without changing artifacts.
+- A source change during review invalidates affected evidence before the verdict is recorded.
+- Human-fix mode produces a private handoff without target edits, remains partial while awaiting a patch, and survives checkpoint resume. A handoff-only request can complete without claiming resolution.
+- A human patch resumes independent verification; failed checks update the handoff without agent repairs. Existing retry/agent budgets and target-read-only restrictions persist.
+
+# Project setup — v0.5.0
+
+Added `cs-setup` and core `setup` routing. Package validation checks the thirteenth wrapper and required setup reference. Disposable-copy negative checks reject a missing wrapper, missing reference, and an unqualified setup command. All 172 existing Node tests pass unchanged.
+
+Setup is an instruction workflow, not an executable installer. Check-only behavior, preservation of existing AGENTS.md content, idempotent updates, malformed-marker handling, symlink refusal, and host-correct handoffs are specified in the setup reference. They have not yet been verified in fresh-agent behavioral exercises or native host discovery; structural validation does not prove those behaviors.
+
 # Dependency visibility validation — v0.4.0
+
+## Continuous integration
+
+`.github/workflows/validate.yml` runs package validation and all bundled Node test suites on pull requests, pushes to `main`, and manual dispatch. The matrix checks the documented Node 18 minimum and Node 24, with Python 3.9. Actions are pinned to commit IDs, the job has read-only repository permissions, and checkout does not persist credentials. No target application, registry acquisition, or deployment is exercised. Native host discovery and controlled-runner repair remain separate verification gaps.
+
+## Release validation
 
 Validated November 7, 2026 with Node.js v26.12.0 and Python 3.
 

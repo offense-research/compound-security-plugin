@@ -3,6 +3,7 @@
   "example_only": true,
   "run_id": "example-tenant-export-run",
   "state": "partial",
+  "repair_mode": "agent-fix",
   "goal": "Fix independently confirmed tenant export isolation findings locally.",
   "target": "/example/repository",
   "scope": ["src/export.js", "tests/export-security.test.js"],

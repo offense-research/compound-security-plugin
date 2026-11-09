@@ -1,3 +1,15 @@
+# Hermes portable package — v0.4.1
+
+Validated 2026-11-09 against Hermes v0.23.0, commit `2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19`.
+
+- `hermes plugins validate <checkout> --install-deps --json`: passed, host ready.
+- `hermes plugins doctor <checkout>`: discovery, parsing and registration passed; zero tools or hooks.
+- Hermes portable loader: all 13 skills discovered, no diagnostics, no MCP servers; wrapper sibling core paths resolve.
+- Package structural validation and all 172 Node tests passed.
+- Scanner warning: `sudo_usage (DESKTOP-MOBILE-AND-LOCAL-IPC.md:58)`. This is audit guidance to review privileged-helper authorization, not an executed command. Disclosed for catalog review.
+
+These checks validate packaging and helper behavior, not an end-to-end LLM-driven security audit. No live target or external scanner was exercised.
+
 # Dependency visibility validation — v0.4.0
 
 Validated November 7, 2026 with Node.js v26.12.0 and Python 3.

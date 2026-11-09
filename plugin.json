@@ -1,0 +1,18 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "compound-security",
+  "version": "0.4.1",
+  "description": "Inspect dependencies, audit, rehearse upgrades, and track verified fixes through rollout and reusable prevention.",
+  "author": {
+    "name": "Offense Research, Inc."
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "security",
+    "audit",
+    "remediation",
+    "verification",
+    "compound-security"
+  ],
+  "repository": "https://github.com/offense-research/compound-security-plugin"
+}

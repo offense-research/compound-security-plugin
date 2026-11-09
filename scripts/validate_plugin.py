@@ -26,9 +26,12 @@ def validate(root):
 
     claude = read_json(".claude-plugin/plugin.json")
     codex = read_json(".codex-plugin/plugin.json")
+    portable = read_json("plugin.json")
+    check(portable.get("$schema") == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", "Portable: unsupported schema")
+    check(portable.get("version") == codex.get("version"), "Portable version disagrees")
     claude_market = read_json(".claude-plugin/marketplace.json")
     codex_market = read_json(".agents/plugins/marketplace.json")
-    for label, manifest in (("Claude", claude), ("Codex", codex)):
+    for label, manifest in (("Claude", claude), ("Codex", codex), ("Portable", portable)):
         check(manifest.get("name") == "compound-security", f"{label}: wrong plugin name")
         check(bool(re.fullmatch(r"\d+\.\d+\.\d+", manifest.get("version", ""))), f"{label}: invalid version")
         check(manifest.get("license") == "Apache-2.0", f"{label}: expected Apache-2.0 license")
@@ -148,7 +151,7 @@ def main():
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Package structure valid: 2 host manifests, 2 marketplaces, 1 core skill, 12 entry points, 2 source notices.")
+    print("Package structure valid: 3 host manifests, 2 marketplaces, 1 core skill, 12 entry points, 2 source notices.")
     print("This is a structural check, not host-load or security-workflow validation.")
     return 0
 

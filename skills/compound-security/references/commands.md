@@ -10,6 +10,10 @@ Read this before recommending a next stage, resumption, or alternative command i
 4. If the host supplied an explicit registry, choose names from it. Otherwise use the current plugin identity with the installed sibling `cs-<mode>/SKILL.md`. If the sibling is unavailable, use an exposed core with the requested mode, or describe the needed action in plain language. Never invent an executable command.
 5. When only the standalone core is exposed, use its registered name followed by the mode. In Codex this is `$compound-security brainstorm <scope>`. If the host or registration is unknown, give a plain-language handoff until it is established.
 
+## Hermes portable package
+
+In Hermes, discover qualified names with `skills_list` and load them through `skill_view`, for example `compound-security:cs-help`. Preserve this namespace when recommending sibling stages. Describe the skill to load and the request in plain language; do not invent slash or dollar commands. Host approval and credential handling remain authoritative.
+
 ## Render the selected next stage
 
 | Installation | Help to brainstorm | Brainstorm to audit |

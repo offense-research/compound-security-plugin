@@ -220,3 +220,26 @@ Bring us a repository, an upgrade backlog, or a security concern. We'll help sco
 ## Attribution
 
 Copyright 2026 Offense Research, Inc. Original Compound Security work is licensed under Apache-2.0. Bundled upstream material retains its MIT notices. See [LICENSE](LICENSE), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and [sources.lock.json](sources.lock.json) for retained notices and exact upstream revisions.
+
+## Hermes Agent
+
+This repository includes an Agent Plugins v1 portable package. Catalog admission is pending; it is not currently an official or verified Hermes listing.
+
+```sh
+hermes plugins install offense-research/compound-security-plugin --no-enable
+hermes plugins enable compound-security
+```
+
+These commands require a published revision containing the root `plugin.json`. For local validation before publication:
+
+```sh
+hermes plugins validate /absolute/path/to/compound-security-plugin --install-deps
+```
+
+Ask Hermes to load `compound-security:cs-help` through `skill_view` to choose a starting point. Skills are discovered through `skills_list`; use the names Hermes actually registers. Do not use Codex dollar-prefixed commands in Hermes.
+
+### Permissions and behavior disclosure
+
+The package supplies instructions and reviewable helper scripts, with no startup hooks, MCP servers, background services, telemetry, credential storage, self-updater, or Python dependencies. Enabling it makes its security workflow instructions available to the agent.
+
+When invoked, workflows read the authorized target repository and may write project instructions, reports, checkpoints, tests, and requested fixes outside the plugin directory. Helpers run shell commands through host tooling and require Node.js for JavaScript validators. Dependency checks and optional connected services can make network requests; private-code uploads or new service connections require user authorization. Existing host approvals remain in effect. Credentials must use Hermes-managed routes; do not read credential stores or bypass host approvals. Availability of scanners, sandboxing, delegation, and connected services is checked at runtime; installation does not provision them.

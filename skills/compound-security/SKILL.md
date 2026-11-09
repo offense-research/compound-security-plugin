@@ -96,11 +96,15 @@ For dependency/infra work, map compatibility and upgrade order before editing. A
 
 ## 4. Fix within scope
 
+If LFG selected `human-fix` in [lfg.md](references/lfg.md), preserve its target-read-only boundary through fix, verify, and compound; prepare a private handoff instead of authoring a patch.
+
 `patch`, `fix`, `run`, and `lfg` authorize the requested local repair within the user's restrictions. Implement the smallest coherent patch plus an invariant-based regression. Coordinate disjoint writes when delegating. Use existing tooling; never install or execute target-controlled software outside the required execution controls.
 
 Record author, changed files, baseline revision, and patched revision/digest. Require the regression to fail for the security reason on baseline and pass after the patch. Setup/compilation failures do not count. Verify legitimate behavior still works; remove unrelated refactoring. Unexecuted patches remain `fixed_unverified`.
 
 ## 5. Independently verify
+
+First apply the version check in [closure-contract.md](references/closure-contract.md), including deployed-version evidence when the claim depends on a running environment. Apply the same check before reconfirming historical findings.
 
 Give a fresh verifier the finding, invariant, exact revisions, patch, test inputs, relevant source, and evidence. Use [reviewer-prompts.md](references/reviewer-prompts.md). Require reconstruction of the boundary and active bypass search across alternate paths. Execute only through the established runner.
 
@@ -122,7 +126,7 @@ Set `compounded` only after verification, durable prevention, and a learning/dec
 
 Report scope/revision/profile; confirmed vs blocked/unreviewed findings; verified fixes vs unverified/deferred work; regression/compatibility evidence; retained prevention/lessons; coverage gaps and next actions. Include output paths and validation results. State when no fix or lesson qualifies. An empty finding list is not proof of security.
 
-For `status`, inspect current source and linked artifacts, identify stale verification, and summarize without writes. End a full run only with requested phases complete or an explicitly recorded incomplete state with exact blockers and all feasible independent work finished.
+For `status`, apply the read-only version check in [closure-contract.md](references/closure-contract.md), inspect current source and linked artifacts, distinguish source freshness from deployment freshness, identify stale verification, and summarize without writes. End a full run only with requested phases complete or an explicitly recorded incomplete state with exact blockers and all feasible independent work finished.
 
 ## Resource map
 

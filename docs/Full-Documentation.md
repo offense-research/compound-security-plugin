@@ -4,6 +4,8 @@ Built by **[Offense Research, Inc.](https://offenseresearch.com/)**. We offer co
 
 This manual contains every Markdown documentation file in the v0.5.0 package, followed by manifests, schemas, example records, metadata, and licenses. Documentation is reproduced in full; headings and internal links are adjusted for this single-document format. Executable validators and the package checker are available in the plugin bundle.
 
+**Workflow update:** The reproduced sections below predate two instruction changes. The canonical [LFG reference](../skills/compound-security/references/lfg.md#human-fix-mode) now supports persistent `human-fix` mode: target-read-only investigation, a private developer handoff, and independent verification after human patches arrive. The canonical [closure contract](../skills/compound-security/references/closure-contract.md#version-check-before-re-review) now requires a fresh source/evidence version check before re-review or closure, plus separately observed deployment identity for deployment-dependent claims. These references supersede the corresponding reproduced instructions below. Neither change installs a background runner or changes the closure schema.
+
 **Project setup:** use `cs-setup` after installation to establish project conventions and check capabilities.
 
 **Start here:** use help to choose a starting point, brainstorm to turn a concern into a scoped brief, and LFG to carry a goal or existing work through the remaining authorized local stages. All three are available through the core skill; the plugin also supplies `cs-help`, `cs-brainstorm`, and `cs-lfg`.

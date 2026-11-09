@@ -110,6 +110,16 @@ Practice on three cases: a direct update, a transitive dependency needing a pare
 
 `cs-run` requests the full audit → plan → fix → verify → compound pipeline. `cs-lfg` starts from a goal, brief, existing audit, remediation plan, or unfinished patch, checks which evidence is still current, and runs the missing stages. It keeps a private checkpoint and carries retry limits forward on resume. Both honor the same evidence and execution gates. Missing capabilities produce an explicit partial result; they never become invented passing tests.
 
+Use `human-fix` when developers should own all target changes:
+
+```text
+$compound-security:cs-lfg human-fix Audit the selected scope, prepare a private developer handoff for confirmed findings, and verify human-authored patches when available. Keep the target repository read-only.
+```
+
+The checkpoint preserves this choice on resume. Missing human patches remain explicitly unresolved; the agent does not write production patches, tests, or tracked lessons in this mode. Verification still requires independent evidence and regression checks.
+
+Before re-review or closure, the workflow checks current source against the audit and test revisions. Deployment-dependent claims also require observed deployed-version evidence mapped to that source; local verification does not establish production resolution. `cs-status` reports mismatches without modifying records.
+
 LFG handles requested local work without repeated stage-by-stage approval. Publishing, messaging, merging, deployment, paid services, or new data uploads still require their own existing authorization. Its checkpoint records progress; it is not an authorization source or an installed background runner.
 
 ## Install from this package

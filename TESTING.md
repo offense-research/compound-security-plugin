@@ -1,3 +1,15 @@
+# Version checks and human-fix mode
+
+Package validation and `git diff --check` pass for these instruction changes. The checkpoint example remains parseable JSON; closure schema and validators are unchanged. Fresh-agent behavioral execution has not been performed.
+
+Behavioral acceptance cases for a future exercise:
+
+- A test log from a different source revision cannot support current closure; preserve the historical record and require revalidation.
+- A locally verified patch with unknown or mismatched deployed build remains locally verified only; deployment resolution stays unproven. Read-only status reports the mismatch without changing artifacts.
+- A source change during review invalidates affected evidence before the verdict is recorded.
+- Human-fix mode produces a private handoff without target edits, remains partial while awaiting a patch, and survives checkpoint resume. A handoff-only request can complete without claiming resolution.
+- A human patch resumes independent verification; failed checks update the handoff without agent repairs. Existing retry/agent budgets and target-read-only restrictions persist.
+
 # Project setup — v0.5.0
 
 Added `cs-setup` and core `setup` routing. Package validation checks the thirteenth wrapper and required setup reference. Disposable-copy negative checks reject a missing wrapper, missing reference, and an unqualified setup command. All 172 existing Node tests pass unchanged.
